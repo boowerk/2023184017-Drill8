@@ -2,7 +2,7 @@
 # 상태 이벤트 e = (종류, 실제값) 튜플로 정의
 from tabnanny import check
 
-from sdl2 import SDL_KEYDOWN, SDLK_SPACE, SDL_KEYUP, SDLK_RIGHT, SDLK_LEFT
+from sdl2 import SDL_KEYDOWN, SDLK_SPACE, SDL_KEYUP, SDLK_RIGHT, SDLK_LEFT, SDLK_a
 
 
 def start_event(e):
@@ -22,6 +22,9 @@ def left_down(e):
 
 def left_up(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_LEFT
+
+def a_down(e):
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_a
 
 def time_out(e):    # e가 time out 인지 판단?
     return e[0] == 'TIME_OUT'
