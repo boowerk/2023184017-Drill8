@@ -104,6 +104,7 @@ class AutoRun:
     def enter(boy, e):
         boy.dir = 1 if boy.face_dir == 1 else -1
         boy.autorun_time = get_time()
+        boy.action = 1
         boy.size = 100
         pass
 
@@ -119,15 +120,21 @@ class AutoRun:
             boy.dir *= -1
             boy.face_dir = boy.dir
 
+            if boy.action == 1:
+                boy.action = 0
+            else:
+                boy.action = 1
+
         if get_time() - boy.autorun_time > 5:
             boy.state_machine.add_event(('TIME_OUT', 0))
         pass
 
     @staticmethod
     def draw(boy):
-        boy.image.clip_draw(
+        boy.image.clip_composite_draw(
             boy.frame * 100, boy.action * 100, 100, 100,
-            boy.x, boy.y, 200, 200
+            0, '',  # 회전 없음
+            boy.x, boy.y, boy.size, boy.size  # 크기 적용
         )
         pass
 
