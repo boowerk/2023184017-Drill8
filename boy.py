@@ -3,7 +3,8 @@ from turtledemo.sorting_animate import start_isort
 from pico2d import load_image, get_time
 from pygame.display import update
 
-from state_machine import StateMachine, space_down, time_out, right_down, left_up, left_down, right_up, start_event
+from state_machine import StateMachine, space_down, time_out, right_down, left_up, left_down, right_up, start_event, \
+    a_down
 
 
 # 상태를 클래스를 통해서 정의함.
@@ -100,19 +101,35 @@ class Run:
 
 class AutoRun:
     @staticmethod
-    def enter():
+    def enter(boy, e):
+        boy.dir = 1 if boy.face_dir == 1 else -1
+        boy.autorun_time = get_time()
+        boy.speed = 10
+        boy.size = 100
         pass
 
     @staticmethod
-    def exit():
+    def exit(boy, e):
         pass
 
     @staticmethod
-    def do():
+    def do(boy):
+        boy.x += boy.dir * boy.speed
+        boy.frame = (boy.frame + 1) % 8
+        if boy.x < 0 or boy.x > 800:
+            boy.dir *= -1
+            boy.face_dir = boy.dir
+
+        if get_time() - boy.autorun_time > 5:
+            boy.state_machine.add_event(('TIME_OUT', 0))
         pass
 
     @staticmethod
-    def draw():
+    def draw(boy):
+        boy.image.clip_draw(
+            boy.frame * 100, boy.action * 100, 100, 100,
+            boy.x, boy.y, 200, 200
+        )
         pass
 
 
@@ -127,9 +144,10 @@ class Boy:
         self.state_machine.start(Idle)      # 초기 상태가 Idle
         self.state_machine.set_transitions(
             {
-                Idle: {right_down: Run, left_down: Run, left_up: Run, right_up: Run, time_out: Sleep},
+                Idle: {right_down: Run, left_down: Run, left_up: Run, right_up: Run, a_down: AutoRun,time_out: Sleep},
                 Run: {right_down: Idle, left_down: Idle, right_up: Idle, left_up: Idle},
-                Sleep: {right_down: Run, left_down: Run, right_up: Run, left_up: Run, space_down: Idle}
+                Sleep: {right_down: Run, left_down: Run, right_up: Run, left_up: Run, space_down: Idle},
+                AutoRun: {right_down: Idle, left_down: Idle, right_up: Idle, left_up:Idle, time_out: Idle}
             }
         )
 
