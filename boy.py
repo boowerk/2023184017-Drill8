@@ -104,7 +104,6 @@ class AutoRun:
     def enter(boy, e):
         boy.dir = 1 if boy.face_dir == 1 else -1
         boy.autorun_time = get_time()
-        boy.speed = 10
         boy.size = 100
         pass
 
@@ -114,7 +113,7 @@ class AutoRun:
 
     @staticmethod
     def do(boy):
-        boy.x += boy.dir * boy.speed
+        boy.x += boy.dir * 30
         boy.frame = (boy.frame + 1) % 8
         if boy.x < 0 or boy.x > 800:
             boy.dir *= -1
@@ -147,7 +146,7 @@ class Boy:
                 Idle: {right_down: Run, left_down: Run, left_up: Run, right_up: Run, a_down: AutoRun,time_out: Sleep},
                 Run: {right_down: Idle, left_down: Idle, right_up: Idle, left_up: Idle},
                 Sleep: {right_down: Run, left_down: Run, right_up: Run, left_up: Run, space_down: Idle},
-                AutoRun: {right_down: Idle, left_down: Idle, right_up: Idle, left_up:Idle, time_out: Idle}
+                AutoRun: {right_down: Run, left_down: Run, right_up: Run, left_up:Run, time_out: Idle}
             }
         )
 
