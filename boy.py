@@ -104,12 +104,13 @@ class AutoRun:
     def enter(boy, e):
         boy.dir = 1 if boy.face_dir == 1 else -1
         boy.autorun_time = get_time()
-        boy.action = 1
+        boy.action = 1 if boy.dir == 1 else 0
         boy.size = 100
         pass
 
     @staticmethod
     def exit(boy, e):
+        boy.action = 2
         pass
 
     @staticmethod
@@ -122,7 +123,7 @@ class AutoRun:
 
             if boy.action == 1:
                 boy.action = 0
-            else:
+            elif boy.action == 0:
                 boy.action = 1
 
         if get_time() - boy.autorun_time > 5:
